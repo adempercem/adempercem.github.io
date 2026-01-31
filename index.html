@@ -5,36 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devim Render Arşivi</title>
     <style>
-        body { font-family: sans-serif; background: #111; color: #fff; text-align: center; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: #222; padding: 10px; border-radius: 8px; }
-        img { width: 100%; border-radius: 5px; height: auto; }
-        .download-btn { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
-        .ads { margin: 40px 0; padding: 20px; background: #333; border: 1px dashed #777; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; margin: 0; text-align: center; }
+        header { background: #1a1a1a; padding: 2rem; border-bottom: 2px solid #333; }
+        h1 { color: #00a8ff; margin: 0; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 30px; }
+        .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: #00a8ff; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-body { padding: 15px; }
+        .download-btn { display: inline-block; background: #00a8ff; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; }
+        .ads { background: #1a1a1a; border: 1px dashed #444; margin: 20px; padding: 20px; color: #777; }
     </style>
 </head>
 <body>
 
-    <h1>Render Arşivim</h1>
-    <p>Ücretsiz ve yüksek kaliteli renderlar.</p>
+<header>
+    <h1>Devim Render Portfolyo</h1>
+</header>
 
-    <div class="ads">
-        <p>REKLAM ALANI (Google AdSense için)</p>
-    </div>
+<div class="ads">REKLAM ALANI</div>
 
-    <div class="gallery">
-        <div class="card">
-            <img src="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/thumbnails/2024.jpg" alt="Render 2024">
-            
+<div class="gallery">
+    <div class="card">
+        <img src="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/thumbnails/2024.jpg" alt="Render">
+        <div class="card-body">
+            <h3>Render 2024</h3>
             <a href="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/2024.jpg" download class="download-btn">HD İndir</a>
         </div>
-
-        
-        </div>
-
-    <div class="ads">
-        <p>REKLAM ALANI (Google AdSense için)</p>
     </div>
+    </div>
+
+<div class="ads">REKLAM ALANI</div>
 
 </body>
 </html>
