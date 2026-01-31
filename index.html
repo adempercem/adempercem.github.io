@@ -5,33 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devim Render Arşivi</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; margin: 0; }
-        header { background: #1a1a1a; padding: 1.5rem; text-align: center; border-bottom: 2px solid #333; }
-        h1 { color: #00a8ff; margin: 0; font-size: 1.8rem; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; margin: 0; text-align: center; }
+        header { background: #1a1a1a; padding: 1.5rem; border-bottom: 2px solid #333; }
+        h1 { color: #00a8ff; margin: 0; }
         
-        /* Galeri Izgarası */
+        .ads { background: #1a1a1a; border: 1px dashed #444; margin: 20px auto; padding: 20px; max-width: 800px; color: #666; }
+
         .gallery { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-            gap: 20px; 
-            padding: 30px; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            padding: 20px; 
             max-width: 1200px; 
             margin: 0 auto; 
         }
 
-        /* Kare Kutu Tasarımı */
         .card { 
             background: #1e1e1e; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             border: 1px solid #333; 
             padding: 15px; 
-            text-align: center;
+            transition: 0.3s;
         }
 
-        /* Resimlerin Kare ve Düzenli Durması İçin */
         .card img { 
             width: 100%; 
-            aspect-ratio: 1 / 1; /* Kare yapar */
+            aspect-ratio: 1 / 1; 
             object-fit: cover; 
             border-radius: 8px; 
             margin-bottom: 15px;
@@ -39,16 +38,16 @@
 
         .download-btn { 
             display: block; 
-            background: #00a8ff; 
+            background: #555; 
             color: white; 
             text-decoration: none; 
-            padding: 8px; 
-            border-radius: 5px; 
-            font-size: 0.9rem;
+            padding: 10px; 
+            border-radius: 8px; 
             font-weight: bold;
+            pointer-events: none; 
+            opacity: 0.6;
+            transition: 0.3s;
         }
-
-        .ads { background: #1a1a1a; border: 1px dashed #444; margin: 20px auto; padding: 15px; max-width: 800px; text-align: center; color: #666; }
     </style>
 </head>
 <body>
@@ -57,17 +56,48 @@
     <h1>Devim Render Portfolyo</h1>
 </header>
 
-<div class="ads">REKLAM ALANI</div>
+<div class="ads">REKLAM ALANI (ÜST)</div>
 
 <div class="gallery">
     <div class="card">
         <img src="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/thumbnails/2024.jpg" alt="Render">
-        <div class="card-info" style="margin-bottom: 10px;">Render 2024</div>
-        <a href="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/2024.jpg" download class="download-btn">İNDİR</a>
+        <div style="margin-bottom: 15px;">Render 2024</div>
+        <a href="https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/2024.jpg" 
+           target="_blank" 
+           id="btn-2024" 
+           class="download-btn">
+           Bekleyin (5s)
+        </a>
     </div>
 </div>
 
-<div class="ads">REKLAM ALANI</div>
+<div class="ads">REKLAM ALANI (ALT)</div>
+
+<script>
+    // 5 Saniye Sayacı Fonksiyonu
+    function startTimer(duration, elementId) {
+        let timer = duration;
+        const display = document.getElementById(elementId);
+        
+        const countdown = setInterval(function () {
+            timer--;
+            display.innerText = "Bekleyin (" + timer + "s)";
+
+            if (timer <= 0) {
+                clearInterval(countdown);
+                display.innerText = "ŞİMDİ AÇ";
+                display.style.background = "#00a8ff";
+                display.style.pointerEvents = "auto";
+                display.style.opacity = "1";
+            }
+        }, 1000);
+    }
+
+    // Sayfa açıldığında sayacı başlat
+    window.onload = function () {
+        startTimer(5, 'btn-2024');
+    };
+</script>
 
 </body>
 </html>
