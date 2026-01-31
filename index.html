@@ -5,61 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devim Render Arşivi</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; margin: 0; text-align: center; }
-        header { background: #1a1a1a; padding: 1.5rem; border-bottom: 2px solid #333; }
-        h1 { color: #00a8ff; margin: 0; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: #1e1e1e; border-radius: 12px; border: 1px solid #333; padding: 15px; text-align: left; display: flex; flex-direction: column; }
-        .card:hover { border-color: #00a8ff; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-        .title { font-size: 1.1rem; color: #fff; font-weight: bold; margin-bottom: 8px; }
-        .description { font-size: 0.85rem; color: #ccc; line-height: 1.4; margin-bottom: 10px; flex-grow: 1; }
-        .tags { font-size: 0.75rem; color: #00a8ff; margin-bottom: 15px; }
-        .download-btn { display: block; background: #444; color: white; text-decoration: none; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; pointer-events: none; opacity: 0.6; transition: 0.3s; }
-        .ads { background: #1a1a1a; border: 1px dashed #444; margin: 20px auto; padding: 20px; max-width: 800px; color: #666; }
+        :root { --main-blue: #00a8ff; --bg-dark: #0f0f0f; --card-bg: #1e1e1e; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: #eee; margin: 0; }
+        header { background: #1a1a1a; padding: 1rem; border-bottom: 2px solid #333; text-align: center; cursor: pointer; }
+        h1 { color: var(--main-blue); margin: 0; }
+
+        /* Reklam Alanları */
+        .ads-side { position: fixed; top: 100px; width: 160px; height: 600px; background: #1a1a1a; border: 1px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; }
+        .ads-left { left: 10px; } .ads-right { right: 10px; }
+        .ads-native { width: 100%; max-width: 800px; height: 120px; background: #1a1a1a; margin: 20px auto; border: 1px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; }
+
+        /* Ana Galeri */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        
+        /* Resim Blokları */
+        .card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; }
+        .card:hover { border-color: var(--main-blue); transform: translateY(-3px); }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .card-title { padding: 10px; border-top: 1px solid #333; text-align: center; font-weight: bold; font-size: 0.9rem; }
+
+        /* Detay Sayfası (Gizli) */
+        #detail-page { display: none; padding: 20px; max-width: 1000px; margin: 0 auto; text-align: left; }
+        .detail-wrapper { display: flex; flex-wrap: wrap; gap: 30px; background: var(--card-bg); padding: 20px; border-radius: 12px; }
+        .detail-img { flex: 1; min-width: 300px; }
+        .detail-img img { width: 100%; border-radius: 8px; border: 1px solid #333; }
+        .detail-info { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
+        
+        .tags { color: var(--main-blue); font-size: 0.85rem; margin: 10px 0; }
+        .download-btn { display: block; background: #444; color: white; text-decoration: none; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; pointer-events: none; opacity: 0.6; margin-top: auto; }
+
+        @media (max-width: 1400px) { .ads-side { display: none; } }
     </style>
 </head>
 <body>
 
-<header><h1>Devim Render Portfolyo</h1></header>
-<div class="ads">REKLAM ALANI (ÜST)</div>
-<div class="gallery" id="main-gallery"></div>
-<div class="ads:">REKLAM ALANI (ALT)</div>
+<header onclick="showHome()"><h1>Devim Render Portfolyo</h1></header>
+
+<div class="ads-side ads-left">REKLAM (SKYSCRAPER)</div>
+<div class="ads-side ads-right">REKLAM (SKYSCRAPER)</div>
+
+<div id="home-page" class="container">
+    <div class="ads-native">ÜST REKLAM ALANI</div>
+    <div class="gallery" id="main-gallery"></div>
+    <div class="ads-native">NATIVE REKLAM ALANI (ALT)</div>
+</div>
+
+<div id="detail-page">
+    <button onclick="showHome()" style="background:none; border:1px solid #444; color:#ccc; padding:8px 15px; cursor:pointer; margin-bottom:20px; border-radius:5px;">← Galeriye Dön</button>
+    <div class="detail-wrapper" id="detail-content">
+        </div>
+    <div class="ads-native">NATIVE REKLAM ALANI (İÇ SAYFA)</div>
+</div>
 
 <script>
     const baseUrl = "https://pub-40fcbb1ac04f4b2eae4ccd3c94e7a970.r2.dev/render/";
+    let galleryData = [];
 
+    // CSV Parçalayıcı
+    function parseCSV(text) {
+        const rows = text.split(/\r?\n/).filter(row => row.trim() !== "");
+        return rows.slice(1).map(row => {
+            const matches = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+            return matches ? matches.map(m => m.replace(/^"|"$/g, "").trim()) : [];
+        });
+    }
+
+    // Ana Galeriye Dönüş
+    function showHome() {
+        document.getElementById('home-page').style.display = 'block';
+        document.getElementById('detail-page').style.display = 'none';
+        window.scrollTo(0,0);
+    }
+
+    // Detay Sayfasını Aç
+    function openDetail(index) {
+        const item = galleryData[index];
+        const detailContent = document.getElementById('detail-content');
+        
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('detail-page').style.display = 'block';
+        
+        const tags = item[2].split(',').map(s => "#" + s.trim()).join(' ');
+
+        detailContent.innerHTML = `
+            <div class="detail-img">
+                <img src="${baseUrl}${item[0]}" alt="${item[1]}">
+            </div>
+            <div class="detail-info">
+                <h2 style="margin-top:0; color:var(--main-blue);">${item[1]}</h2>
+                <p style="color:#aaa;"><strong>Dosya:</strong> ${item[0]}</p>
+                <div class="tags">${tags}</div>
+                <p class="description">${item[3]}</p>
+                <a href="${baseUrl}${item[0]}" target="_blank" id="timer-btn" class="download-btn">Bekleyin (5s)</a>
+            </div>
+        `;
+        startTimer(5, 'timer-btn');
+    }
+
+    // Verileri Çek
     fetch('metadata.csv')
         .then(res => res.text())
         .then(data => {
-            // Satırları ayır ve boş satırları temizle
-            const rows = data.split('\n').filter(row => row.trim() !== "");
+            galleryData = parseCSV(data);
             const gallery = document.getElementById('main-gallery');
             
-            // İlk satır başlık olduğu için 1. indexten başlıyoruz
-            for (let i = 1; i < rows.length; i++) {
-                // CSV'deki tırnak içindeki virgülleri korumak için regex kullanıyoruz
-                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                if (!cols) continue;
-
-                const file = cols[0].replace(/"/g, "");
-                const title = cols[1].replace(/"/g, "");
-                const subjects = cols[2].replace(/"/g, "").split(',').map(s => "#" + s.trim()).join(' ');
-                const desc = cols[3].replace(/"/g, "");
-                
-                const btnId = `btn-${i}`;
-                
+            galleryData.forEach((item, index) => {
+                if (item.length < 4) return;
                 gallery.innerHTML += `
-                    <div class="card">
-                        <img src="${baseUrl}thumbnails/${file}" alt="${title}">
-                        <div class="title">${title}</div>
-                        <div class="description">${desc}</div>
-                        <div class="tags">${subjects}</div>
-                        <a href="${baseUrl}${file}" target="_blank" id="${btnId}" class="download-btn">Bekleyin (5s)</a>
+                    <div class="card" onclick="openDetail(${index})">
+                        <img src="${baseUrl}thumbnails/${item[0]}" alt="${item[1]}">
+                        <div class="card-title">${item[1]}</div>
                     </div>
                 `;
-                startTimer(5, btnId);
-            }
+            });
         });
 
     function startTimer(duration, elementId) {
@@ -67,10 +126,10 @@
         const display = document.getElementById(elementId);
         const countdown = setInterval(() => {
             timer--;
-            display.innerText = `Bekleyin (${timer}s)`;
+            display.innerText = `İNDİRMEK İÇİN BEKLEYİN (${timer}s)`;
             if (timer <= 0) {
                 clearInterval(countdown);
-                display.innerText = "RESMİ AÇ";
+                display.innerText = "RESMİ TAM BOYUT AÇ";
                 display.style.background = "#00a8ff";
                 display.style.pointerEvents = "auto";
                 display.style.opacity = "1";
